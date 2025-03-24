@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -19,6 +20,6 @@ public class ScormCourse {
 	private String courseName;
 
 	private String filePath;
-
-	private String status;
+	
+	private String title;
 }

@@ -1,5 +1,6 @@
 package com.gemini.scorm.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gemini.scorm.model.ScormCourse;
 import com.gemini.scorm.service.ScormCourseService;
@@ -25,10 +27,17 @@ public class ScormCourseController {
 	@Autowired
 	private ScormCourseService service;
 
+//	@PostMapping("/upload")
+//	public ResponseEntity<ScormCourse> uploadScormCourse(@RequestBody ScormCourse course) {
+//		ScormCourse savedCourse = service.saveCourse(course);
+//		return ResponseEntity.status(201).body(savedCourse);
+//	}
+
 	@PostMapping("/upload")
-	public ResponseEntity<ScormCourse> uploadScormCourse(@RequestBody ScormCourse course) {
-		ScormCourse savedCourse = service.saveCourse(course);
+	public ResponseEntity<ScormCourse> uploadScormPackage(@RequestParam("file") MultipartFile file) throws IOException {
+		ScormCourse savedCourse = service.saveAndExtractScorm(file);
 		return ResponseEntity.status(201).body(savedCourse);
+
 	}
 
 	@GetMapping("/courses")
