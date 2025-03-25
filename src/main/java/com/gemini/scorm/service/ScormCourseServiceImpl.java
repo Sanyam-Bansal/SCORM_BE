@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -60,12 +61,29 @@ public class ScormCourseServiceImpl implements ScormCourseService {
 		}
 
 		String title = extractCourseTitle(courseDir);
-		String launchUrl = "/scorm-content/" + courseName + "/course/index.html";
+		String launchUrl = detectLaunchFile(courseDir, courseName);
+//		String launchUrl = "/scorm-content/" + courseName + "/course/index.html";
 		ScormCourse course = new ScormCourse();
 		course.setCourseName(courseName);
 		course.setFilePath(launchUrl);
 		course.setTitle(title);
 		return repository.save(course);
+	}
+
+	private String detectLaunchFile(Path courseDir, String courseName) {
+		try (Stream<Path> paths = Files.walk(courseDir)) {
+			Optional<Path> indexPath = paths.filter(Files::isRegularFile) 
+					.filter(path -> path.getFileName().toString().equalsIgnoreCase("index.html")) 
+					.findFirst();
+
+			if (indexPath.isPresent()) {
+				Path relativePath = courseDir.relativize(indexPath.get()); 
+				return "/scorm-content/" + courseName + "/" + relativePath.toString().replace("\\", "/"); 
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "/scorm-content/" + courseName + "/index.html"; 
 	}
 
 	private String extractCourseTitle(Path courseDir) {
