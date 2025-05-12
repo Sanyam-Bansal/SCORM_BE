@@ -10,7 +10,10 @@ public class UserProgressDTO {
 	private Long userId;
 	private Long courseId;
 	private String completionStatus;
-	private int score;
+	private Integer score;
 	private String totalTime;
+	private Double percentage;
+	private String passFail;
+	private LocalDateTime completionDate;
 	private LocalDateTime lastAccessed;
 }

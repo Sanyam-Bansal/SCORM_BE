@@ -10,4 +10,6 @@ public interface UserProgressService {
 	public UserProgress saveProgress(UserProgressDTO dto);
 	
 	public List<UserProgress> getProgressByCourseId(Long courseId);
+	
+	public UserProgress getProgressByUserIdAndCourseId(Long userId, Long courseId);
 }
